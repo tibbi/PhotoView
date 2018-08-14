@@ -269,6 +269,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         this.mSingleFlingListener = onSingleFlingListener;
     }
 
+    public void setAllowFingerDragZoom(boolean allow) {
+        mScaleDragDetector.setAllowFingerDragZoom(allow);
+    }
+
     @Deprecated
     public boolean isZoomEnabled() {
         return mZoomEnabled;

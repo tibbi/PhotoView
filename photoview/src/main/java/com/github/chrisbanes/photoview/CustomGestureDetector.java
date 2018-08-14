@@ -16,6 +16,7 @@
 package com.github.chrisbanes.photoview;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
@@ -72,6 +73,12 @@ class CustomGestureDetector {
             }
         };
         mDetector = new ScaleGestureDetector(context, mScaleListener);
+    }
+
+    public void setAllowFingerDragZoom(boolean allow) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mDetector.setQuickScaleEnabled(allow);
+        }
     }
 
     private float getActiveX(MotionEvent ev) {
