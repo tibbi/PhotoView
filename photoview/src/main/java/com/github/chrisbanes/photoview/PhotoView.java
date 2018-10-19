@@ -146,8 +146,18 @@ public class PhotoView extends AppCompatImageView {
         return attacher.isZoomable();
     }
 
+    // adding a workaround to make sure Tap listener works with zooming disabled
     public void setZoomable(boolean zoomable) {
-        attacher.setZoomable(zoomable);
+        if (zoomable) {
+            attacher.setMinimumScale(attacher.DEFAULT_MIN_SCALE);
+            attacher.setMediumScale(attacher.DEFAULT_MID_SCALE);
+            attacher.setMaximumScale(attacher.DEFAULT_MAX_SCALE);
+        } else {
+            attacher.setMinimumScale(1f);
+            attacher.setMediumScale(1f);
+            attacher.setMaximumScale(1f);
+        }
+        //attacher.setZoomable(zoomable);
     }
 
     public RectF getDisplayRect() {
