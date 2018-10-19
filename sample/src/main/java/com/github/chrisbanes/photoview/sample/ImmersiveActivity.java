@@ -26,7 +26,7 @@ public class ImmersiveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_immersive);
 
         PhotoView photoView = findViewById(R.id.photo_view);
-        Picasso.with(this)
+        Picasso.get()
                 .load("http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg")
                 .into(photoView);
         photoView.setOnPhotoTapListener(new OnPhotoTapListener() {

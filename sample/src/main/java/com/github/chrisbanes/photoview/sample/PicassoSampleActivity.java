@@ -16,7 +16,7 @@ public class PicassoSampleActivity extends AppCompatActivity {
 
         final PhotoView photoView = findViewById(R.id.iv_photo);
 
-        Picasso.with(this)
+        Picasso.get()
                 .load("http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg")
                 .into(photoView);
     }
