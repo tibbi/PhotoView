@@ -46,7 +46,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
     // adding a workaround to make sure Tap listener works with zooming disabled
     var isZoomable: Boolean
-        get() = attacher!!.isZoomable
+        get() = attacher!!.isZoomable!!
         set(zoomable) = if (zoomable) {
             attacher!!.minimumScale = attacher!!.DEFAULT_MIN_SCALE
             attacher!!.mediumScale = attacher!!.DEFAULT_MID_SCALE
@@ -58,7 +58,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
         }
 
     val displayRect: RectF
-        get() = attacher!!.displayRect
+        get() = attacher!!.displayRect!!
 
     var minimumScale: Float
         get() = attacher!!.minimumScale
@@ -108,11 +108,11 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
         return attacher!!.imageMatrix
     }
 
-    override fun setOnLongClickListener(l: View.OnLongClickListener?) {
+    override fun setOnLongClickListener(l: View.OnLongClickListener) {
         attacher!!.setOnLongClickListener(l)
     }
 
-    override fun setOnClickListener(l: View.OnClickListener?) {
+    override fun setOnClickListener(l: View.OnClickListener) {
         attacher!!.setOnClickListener(l)
     }
 
