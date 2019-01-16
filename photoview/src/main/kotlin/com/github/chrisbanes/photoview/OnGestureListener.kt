@@ -13,15 +13,12 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.github.chrisbanes.photoview;
+package com.github.chrisbanes.photoview
 
-interface OnGestureListener {
+internal interface OnGestureListener {
+    fun onDrag(dx: Float, dy: Float)
 
-    void onDrag(float dx, float dy);
+    fun onFling(startX: Float, startY: Float, velocityX: Float, velocityY: Float)
 
-    void onFling(float startX, float startY, float velocityX,
-                 float velocityY);
-
-    void onScale(float scaleFactor, float focusX, float focusY);
-
+    fun onScale(scaleFactor: Float, focusX: Float, focusY: Float)
 }

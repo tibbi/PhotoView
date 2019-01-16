@@ -336,7 +336,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
-        if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
+        if (mZoomEnabled && Util.INSTANCE.hasDrawable((ImageView) v)) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     ViewParent parent = v.getParent();
@@ -393,22 +393,18 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setMinimumScale(float minimumScale) {
-        Util.checkZoomLevels(minimumScale, mMidScale, mMaxScale);
         mMinScale = minimumScale;
     }
 
     public void setMediumScale(float mediumScale) {
-        Util.checkZoomLevels(mMinScale, mediumScale, mMaxScale);
         mMidScale = mediumScale;
     }
 
     public void setMaximumScale(float maximumScale) {
-        Util.checkZoomLevels(mMinScale, mMidScale, maximumScale);
         mMaxScale = maximumScale;
     }
 
     public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
-        Util.checkZoomLevels(minimumScale, mediumScale, maximumScale);
         mMinScale = minimumScale;
         mMidScale = mediumScale;
         mMaxScale = maximumScale;
@@ -478,7 +474,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setScaleType(ScaleType scaleType) {
-        if (Util.isSupportedScaleType(scaleType) && scaleType != mScaleType) {
+        if (Util.INSTANCE.isSupportedScaleType(scaleType) && scaleType != mScaleType) {
             mScaleType = scaleType;
             update();
         }

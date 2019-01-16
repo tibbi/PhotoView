@@ -188,7 +188,7 @@ class CustomGestureDetector {
                 }
                 break;
             case MotionEvent.ACTION_POINTER_UP:
-                final int pointerIndex = Util.getPointerIndex(ev.getAction());
+                final int pointerIndex = Util.INSTANCE.getPointerIndex(ev.getAction());
                 final int pointerId = ev.getPointerId(pointerIndex);
                 if (pointerId == mActivePointerId) {
                     // This was our active pointer going up. Choose a new
