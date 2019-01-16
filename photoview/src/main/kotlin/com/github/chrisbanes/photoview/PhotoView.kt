@@ -21,10 +21,8 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.View
 import android.widget.ImageView
-
 import androidx.appcompat.widget.AppCompatImageView
 
 /**
@@ -170,22 +168,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
         return attacher!!.setDisplayMatrix(finalRectangle)
     }
 
-    fun getSuppMatrix(matrix: Matrix) {
-        attacher!!.getSuppMatrix(matrix)
-    }
-
-    fun setSuppMatrix(matrix: Matrix): Boolean {
-        return attacher!!.setDisplayMatrix(matrix)
-    }
-
-    fun setAllowParentInterceptOnEdge(allow: Boolean) {
-        attacher!!.setAllowParentInterceptOnEdge(allow)
-    }
-
-    fun setScaleLevels(minimumScale: Float, mediumScale: Float, maximumScale: Float) {
-        attacher!!.setScaleLevels(minimumScale, mediumScale, maximumScale)
-    }
-
     fun setOnMatrixChangeListener(listener: OnMatrixChangedListener) {
         attacher!!.setOnMatrixChangeListener(listener)
     }
@@ -194,36 +176,8 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
         attacher!!.setOnPhotoTapListener(listener)
     }
 
-    fun setOnOutsidePhotoTapListener(listener: OnOutsidePhotoTapListener) {
-        attacher!!.setOnOutsidePhotoTapListener(listener)
-    }
-
-    fun setOnViewTapListener(listener: OnViewTapListener) {
-        attacher!!.setOnViewTapListener(listener)
-    }
-
-    fun setOnViewDragListener(listener: OnViewDragListener) {
-        attacher!!.setOnViewDragListener(listener)
-    }
-
     fun setScale(scale: Float, animate: Boolean) {
         attacher!!.setScale(scale, animate)
-    }
-
-    fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
-        attacher!!.setScale(scale, focalX, focalY, animate)
-    }
-
-    fun setZoomTransitionDuration(milliseconds: Int) {
-        attacher!!.setZoomTransitionDuration(milliseconds)
-    }
-
-    fun setOnDoubleTapListener(onDoubleTapListener: GestureDetector.OnDoubleTapListener) {
-        attacher!!.setOnDoubleTapListener(onDoubleTapListener)
-    }
-
-    fun setOnScaleChangeListener(onScaleChangedListener: OnScaleChangedListener) {
-        attacher!!.setOnScaleChangeListener(onScaleChangedListener)
     }
 
     fun setOnSingleFlingListener(onSingleFlingListener: OnSingleFlingListener) {

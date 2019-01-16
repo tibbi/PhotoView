@@ -248,14 +248,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         });
     }
 
-    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
-        this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
-    }
-
-    public void setOnScaleChangeListener(OnScaleChangedListener onScaleChangeListener) {
-        this.mScaleChangeListener = onScaleChangeListener;
-    }
-
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         this.mSingleFlingListener = onSingleFlingListener;
     }
@@ -284,13 +276,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mSuppMatrix.set(finalMatrix);
         checkAndDisplayMatrix();
         return true;
-    }
-
-    public void setBaseRotation(final float degrees) {
-        mBaseRotation = degrees % 360;
-        update();
-        setRotationBy(mBaseRotation);
-        checkAndDisplayMatrix();
     }
 
     public void setRotationTo(float degrees) {
@@ -388,10 +373,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return handled;
     }
 
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        mAllowParentInterceptOnEdge = allow;
-    }
-
     public void setMinimumScale(float minimumScale) {
         mMinScale = minimumScale;
     }
@@ -401,12 +382,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setMaximumScale(float maximumScale) {
-        mMaxScale = maximumScale;
-    }
-
-    public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
-        mMinScale = minimumScale;
-        mMidScale = mediumScale;
         mMaxScale = maximumScale;
     }
 
@@ -424,18 +399,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnPhotoTapListener(OnPhotoTapListener listener) {
         mPhotoTapListener = listener;
-    }
-
-    public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener mOutsidePhotoTapListener) {
-        this.mOutsidePhotoTapListener = mOutsidePhotoTapListener;
-    }
-
-    public void setOnViewTapListener(OnViewTapListener listener) {
-        mViewTapListener = listener;
-    }
-
-    public void setOnViewDragListener(OnViewDragListener listener) {
-        mOnViewDragListener = listener;
     }
 
     public void setScale(float scale) {
@@ -464,15 +427,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
-    /**
-     * Set the zoom interpolator
-     *
-     * @param interpolator the zoom interpolator
-     */
-    public void setZoomInterpolator(Interpolator interpolator) {
-        mInterpolator = interpolator;
-    }
-
     public void setScaleType(ScaleType scaleType) {
         if (Util.INSTANCE.isSupportedScaleType(scaleType) && scaleType != mScaleType) {
             mScaleType = scaleType;
@@ -482,11 +436,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public boolean isZoomable() {
         return mZoomEnabled;
-    }
-
-    public void setZoomable(boolean zoomable) {
-        mZoomEnabled = zoomable;
-        update();
     }
 
     public void update() {
@@ -523,10 +472,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public Matrix getImageMatrix() {
         return mDrawMatrix;
-    }
-
-    public void setZoomTransitionDuration(int milliseconds) {
-        this.mZoomDuration = milliseconds;
     }
 
     /**
