@@ -157,7 +157,6 @@ public class PhotoView extends AppCompatImageView {
             attacher.setMediumScale(1f);
             attacher.setMaximumScale(1f);
         }
-        //attacher.setZoomable(zoomable);
     }
 
     public RectF getDisplayRect() {
@@ -168,7 +167,8 @@ public class PhotoView extends AppCompatImageView {
         attacher.getDisplayMatrix(matrix);
     }
 
-    @SuppressWarnings("UnusedReturnValue") public boolean setDisplayMatrix(Matrix finalRectangle) {
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean setDisplayMatrix(Matrix finalRectangle) {
         return attacher.setDisplayMatrix(finalRectangle);
     }
 

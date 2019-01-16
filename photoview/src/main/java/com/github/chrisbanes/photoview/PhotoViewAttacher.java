@@ -746,7 +746,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             onGestureListener.onScale(deltaScale, mFocalX, mFocalY);
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
-                Compat.postOnAnimation(mImageView, this);
+                mImageView.postOnAnimation(this);
             }
         }
 
@@ -814,7 +814,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mCurrentX = newX;
                 mCurrentY = newY;
                 // Post On animation
-                Compat.postOnAnimation(mImageView, this);
+                mImageView.postOnAnimation(this);
             }
         }
     }

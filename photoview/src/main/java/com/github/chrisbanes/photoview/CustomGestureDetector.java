@@ -16,7 +16,6 @@
 package com.github.chrisbanes.photoview;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
@@ -56,7 +55,7 @@ class CustomGestureDetector {
 
                 if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor))
                     return false;
-             
+
                 if (scaleFactor >= 0) {
                     mListener.onScale(scaleFactor,
                             detector.getFocusX(), detector.getFocusY());
@@ -77,10 +76,8 @@ class CustomGestureDetector {
         mDetector = new ScaleGestureDetector(context, mScaleListener);
     }
 
-    public void setAllowFingerDragZoom(boolean allow) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mDetector.setQuickScaleEnabled(allow);
-        }
+    void setAllowFingerDragZoom(boolean allow) {
+        mDetector.setQuickScaleEnabled(allow);
     }
 
     private float getActiveX(MotionEvent ev) {
@@ -99,15 +96,15 @@ class CustomGestureDetector {
         }
     }
 
-    public boolean isScaling() {
+    boolean isScaling() {
         return mDetector.isInProgress();
     }
 
-    public boolean isDragging() {
+    boolean isDragging() {
         return mIsDragging;
     }
 
-    public boolean onTouchEvent(MotionEvent ev) {
+    boolean onTouchEvent(MotionEvent ev) {
         try {
             mDetector.onTouchEvent(ev);
             return processTouchEvent(ev);
