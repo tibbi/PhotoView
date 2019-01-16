@@ -31,10 +31,10 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
     private val mDetector: ScaleGestureDetector
 
     private var mVelocityTracker: VelocityTracker? = null
-    var isDragging: Boolean = false
+    var isDragging = false
         private set
-    private var mLastTouchX: Float = 0.toFloat()
-    private var mLastTouchY: Float = 0.toFloat()
+    private var mLastTouchX = 0f
+    private var mLastTouchY = 0f
     private val mTouchSlop: Float
     private val mMinimumVelocity: Float
 
@@ -77,30 +77,30 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
     }
 
     private fun getActiveX(ev: MotionEvent): Float {
-        try {
-            return ev.getX(mActivePointerIndex)
+        return try {
+            ev.getX(mActivePointerIndex)
         } catch (e: Exception) {
-            return ev.x
+            ev.x
         }
 
     }
 
     private fun getActiveY(ev: MotionEvent): Float {
-        try {
-            return ev.getY(mActivePointerIndex)
+        return try {
+            ev.getY(mActivePointerIndex)
         } catch (e: Exception) {
-            return ev.y
+            ev.y
         }
 
     }
 
     fun onTouchEvent(ev: MotionEvent): Boolean {
-        try {
+        return try {
             mDetector.onTouchEvent(ev)
-            return processTouchEvent(ev)
+            processTouchEvent(ev)
         } catch (e: IllegalArgumentException) {
             // Fix for support lib bug, happening when onDestroy is called
-            return true
+            true
         }
 
     }

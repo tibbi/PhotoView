@@ -17,7 +17,6 @@ package com.github.chrisbanes.photoview
 
 import android.content.Context
 import android.graphics.Matrix
-import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
@@ -55,19 +54,10 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
             attacher!!.maximumScale = 1f
         }
 
-    val displayRect: RectF
-        get() = attacher!!.displayRect!!
-
     var minimumScale: Float
         get() = attacher!!.minimumScale
         set(minimumScale) {
             attacher!!.minimumScale = minimumScale
-        }
-
-    var mediumScale: Float
-        get() = attacher!!.mediumScale
-        set(mediumScale) {
-            attacher!!.mediumScale = mediumScale
         }
 
     var maximumScale: Float
@@ -76,17 +66,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
             attacher!!.maximumScale = maximumScale
         }
 
-    var scale: Float
-        get() = attacher!!.scale
-        set(scale) {
-            attacher!!.scale = scale
-        }
-
     init {
-        init()
-    }
-
-    private fun init() {
         attacher = PhotoViewAttacher(this)
         //We always pose as a Matrix scale type, though we can change to another scale type
         //via the attacher
@@ -150,14 +130,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
             attacher!!.update()
         }
         return changed
-    }
-
-    fun setRotationTo(rotationDegree: Float) {
-        attacher!!.setRotationTo(rotationDegree)
-    }
-
-    fun setRotationBy(rotationDegree: Float) {
-        attacher!!.setRotationBy(rotationDegree)
     }
 
     fun getDisplayMatrix(matrix: Matrix) {
