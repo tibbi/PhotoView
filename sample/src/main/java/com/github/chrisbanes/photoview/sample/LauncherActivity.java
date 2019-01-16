@@ -31,12 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class LauncherActivity extends AppCompatActivity {
 
     public static final String[] options = {
-            "Simple Sample",
-            "ViewPager Sample",
-            "Rotation Sample",
-            "Picasso Sample",
-            "Activity Transition Sample",
-            "Immersive Sample"
+            "Simple Sample"
     };
 
     @Override
@@ -49,7 +44,6 @@ public class LauncherActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ItemAdapter());
     }
-
 
     private static class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         @Override
@@ -65,20 +59,6 @@ public class LauncherActivity extends AppCompatActivity {
                         case 0:
                             clazz = SimpleSampleActivity.class;
                             break;
-                        case 1:
-                            clazz = ViewPagerActivity.class;
-                            break;
-                        case 2:
-                            clazz = RotationSampleActivity.class;
-                            break;
-                        case 3:
-                            clazz = PicassoSampleActivity.class;
-                            break;
-                        case 4:
-                            clazz = ActivityTransitionActivity.class;
-                            break;
-                        case 5:
-                            clazz = ImmersiveActivity.class;
                     }
 
                     Context context = holder.itemView.getContext();
