@@ -54,18 +54,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
             attacher!!.maximumScale = 1f
         }
 
-    var minimumScale: Float
-        get() = attacher!!.minimumScale
-        set(minimumScale) {
-            attacher!!.minimumScale = minimumScale
-        }
-
-    var maximumScale: Float
-        get() = attacher!!.maximumScale
-        set(maximumScale) {
-            attacher!!.maximumScale = maximumScale
-        }
-
     init {
         attacher = PhotoViewAttacher(this)
         //We always pose as a Matrix scale type, though we can change to another scale type
@@ -84,10 +72,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
     override fun getImageMatrix(): Matrix {
         return attacher!!.imageMatrix
-    }
-
-    override fun setOnLongClickListener(l: View.OnLongClickListener) {
-        attacher!!.setOnLongClickListener(l)
     }
 
     override fun setOnClickListener(l: View.OnClickListener) {
@@ -130,30 +114,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
             attacher!!.update()
         }
         return changed
-    }
-
-    fun getDisplayMatrix(matrix: Matrix) {
-        attacher!!.getDisplayMatrix(matrix)
-    }
-
-    fun setDisplayMatrix(finalRectangle: Matrix): Boolean {
-        return attacher!!.setDisplayMatrix(finalRectangle)
-    }
-
-    fun setOnMatrixChangeListener(listener: OnMatrixChangedListener) {
-        attacher!!.setOnMatrixChangeListener(listener)
-    }
-
-    fun setOnPhotoTapListener(listener: OnPhotoTapListener) {
-        attacher!!.setOnPhotoTapListener(listener)
-    }
-
-    fun setScale(scale: Float, animate: Boolean) {
-        attacher!!.setScale(scale, animate)
-    }
-
-    fun setOnSingleFlingListener(onSingleFlingListener: OnSingleFlingListener) {
-        attacher!!.setOnSingleFlingListener(onSingleFlingListener)
     }
 
     fun setAllowFingerDragZoom(allow: Boolean) {
