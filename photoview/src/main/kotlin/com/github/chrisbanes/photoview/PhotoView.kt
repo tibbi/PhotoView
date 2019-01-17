@@ -16,7 +16,6 @@
 package com.github.chrisbanes.photoview
 
 import android.content.Context
-import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
@@ -29,11 +28,11 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
     // adding a workaround to make sure Tap listener works with zooming disabled
     var isZoomable: Boolean
-        get() = attacher!!.isZoomable!!
+        get() = attacher!!.isZoomable()
         set(zoomable) = if (zoomable) {
-            attacher!!.minimumScale = attacher!!.DEFAULT_MIN_SCALE
-            attacher!!.mediumScale = attacher!!.DEFAULT_MID_SCALE
-            attacher!!.maximumScale = attacher!!.DEFAULT_MAX_SCALE
+            attacher!!.minimumScale = PhotoViewAttacher.DEFAULT_MIN_SCALE
+            attacher!!.mediumScale = PhotoViewAttacher.DEFAULT_MID_SCALE
+            attacher!!.maximumScale = PhotoViewAttacher.DEFAULT_MAX_SCALE
         } else {
             attacher!!.minimumScale = 1f
             attacher!!.mediumScale = 1f
@@ -45,43 +44,31 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
         super.setScaleType(ImageView.ScaleType.MATRIX)
     }
 
-    override fun getScaleType(): ImageView.ScaleType {
-        return attacher!!.scaleType
-    }
+    override fun getScaleType() = attacher!!.getScaleType()
 
-    override fun getImageMatrix(): Matrix {
-        return attacher!!.imageMatrix
-    }
+    override fun getImageMatrix() = attacher!!.getImageMatrix()
 
     override fun setOnClickListener(l: View.OnClickListener) {
         attacher!!.setOnClickListener(l)
     }
 
     override fun setScaleType(scaleType: ImageView.ScaleType) {
-        if (attacher != null) {
-            attacher!!.scaleType = scaleType
-        }
+        attacher?.setScaleType(scaleType)
     }
 
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(drawable)
-        if (attacher != null) {
-            attacher!!.update()
-        }
+        attacher?.update()
     }
 
     override fun setImageResource(resId: Int) {
         super.setImageResource(resId)
-        if (attacher != null) {
-            attacher!!.update()
-        }
+        attacher?.update()
     }
 
     override fun setImageURI(uri: Uri?) {
         super.setImageURI(uri)
-        if (attacher != null) {
-            attacher!!.update()
-        }
+        attacher?.update()
     }
 
     override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
