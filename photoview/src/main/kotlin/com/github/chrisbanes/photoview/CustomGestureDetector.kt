@@ -1,18 +1,3 @@
-/*
- Copyright 2011, 2012 Chris Banes.
- <p/>
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- <p/>
- http://www.apache.org/licenses/LICENSE-2.0
- <p/>
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- */
 package com.github.chrisbanes.photoview
 
 import android.content.Context
@@ -34,15 +19,13 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
     private val mMinimumVelocity: Float
     var isDragging = false
 
-    val isScaling: Boolean
-        get() = mDetector.isInProgress
+    fun getIsScaling() = mDetector.isInProgress
 
     init {
         val configuration = ViewConfiguration.get(context)
         mMinimumVelocity = configuration.scaledMinimumFlingVelocity.toFloat()
         mTouchSlop = configuration.scaledTouchSlop.toFloat()
-        val mScaleListener = object : ScaleGestureDetector.OnScaleGestureListener {
-
+        val scaleListener = object : ScaleGestureDetector.OnScaleGestureListener {
             override fun onScale(detector: ScaleGestureDetector): Boolean {
                 val scaleFactor = detector.scaleFactor
 
@@ -55,14 +38,11 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                 return true
             }
 
-            override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-                return true
-            }
+            override fun onScaleBegin(detector: ScaleGestureDetector) = true
 
-            override fun onScaleEnd(detector: ScaleGestureDetector) {
-            }
+            override fun onScaleEnd(detector: ScaleGestureDetector) {}
         }
-        mDetector = ScaleGestureDetector(context, mScaleListener)
+        mDetector = ScaleGestureDetector(context, scaleListener)
     }
 
     fun setAllowFingerDragZoom(allow: Boolean) {
@@ -75,7 +55,6 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
         } catch (e: Exception) {
             ev.x
         }
-
     }
 
     private fun getActiveY(ev: MotionEvent): Float {
@@ -84,7 +63,6 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
         } catch (e: Exception) {
             ev.y
         }
-
     }
 
     fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -92,10 +70,8 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
             mDetector.onTouchEvent(ev)
             processTouchEvent(ev)
         } catch (e: IllegalArgumentException) {
-            // Fix for support lib bug, happening when onDestroy is called
             true
         }
-
     }
 
     private fun processTouchEvent(ev: MotionEvent): Boolean {
@@ -105,9 +81,7 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                 mActivePointerId = ev.getPointerId(0)
 
                 mVelocityTracker = VelocityTracker.obtain()
-                if (null != mVelocityTracker) {
-                    mVelocityTracker!!.addMovement(ev)
-                }
+                mVelocityTracker?.addMovement(ev)
 
                 mLastTouchX = getActiveX(ev)
                 mLastTouchY = getActiveY(ev)
@@ -127,23 +101,18 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                     mListener.onDrag(dx, dy)
                     mLastTouchX = x
                     mLastTouchY = y
-
-                    if (null != mVelocityTracker) {
-                        mVelocityTracker!!.addMovement(ev)
-                    }
+                    mVelocityTracker?.addMovement(ev)
                 }
             }
             MotionEvent.ACTION_CANCEL -> {
                 mActivePointerId = INVALID_POINTER_ID
-                if (null != mVelocityTracker) {
-                    mVelocityTracker!!.recycle()
-                    mVelocityTracker = null
-                }
+                mVelocityTracker?.recycle()
+                mVelocityTracker = null
             }
             MotionEvent.ACTION_UP -> {
                 mActivePointerId = INVALID_POINTER_ID
                 if (isDragging) {
-                    if (null != mVelocityTracker) {
+                    if (mVelocityTracker != null) {
                         mLastTouchX = getActiveX(ev)
                         mLastTouchY = getActiveY(ev)
 
@@ -159,10 +128,8 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                     }
                 }
 
-                if (null != mVelocityTracker) {
-                    mVelocityTracker!!.recycle()
-                    mVelocityTracker = null
-                }
+                mVelocityTracker?.recycle()
+                mVelocityTracker = null
             }
             MotionEvent.ACTION_POINTER_UP -> {
                 val pointerIndex = ev.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT

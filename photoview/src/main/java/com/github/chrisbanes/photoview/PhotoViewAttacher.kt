@@ -1,18 +1,3 @@
-/*
- Copyright 2011, 2012 Chris Banes.
- <p>
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- <p>
- http://www.apache.org/licenses/LICENSE-2.0
- <p>
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- */
 package com.github.chrisbanes.photoview
 
 import android.content.Context
@@ -41,23 +26,20 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
         private const val VERTICAL_EDGE_BOTTOM = 1
         private const val VERTICAL_EDGE_BOTH = 2
 
-        internal const val DEFAULT_MAX_SCALE = 3.0f
-        internal const val DEFAULT_MID_SCALE = 1.75f
-        internal const val DEFAULT_MIN_SCALE = 1.0f
+        const val DEFAULT_MAX_SCALE = 3.0f
+        const val DEFAULT_MID_SCALE = 1.75f
+        const val DEFAULT_MIN_SCALE = 1.0f
     }
 
     private val mInterpolator = AccelerateDecelerateInterpolator()
-    var minimumScale = DEFAULT_MIN_SCALE
-    var mediumScale = DEFAULT_MID_SCALE
-    var maximumScale = DEFAULT_MAX_SCALE
 
     private var mBlockParentIntercept = false
+    private val mIsZoomEnabled = true
 
     private var mGestureDetector: GestureDetector?
     private val mScaleDragDetector: CustomGestureDetector?
 
     private val mBaseMatrix = Matrix()
-    private val mDrawMatrix = Matrix()
     private val mSuppMatrix = Matrix()
     private val mDisplayRect = RectF()
     private val mMatrixValues = FloatArray(9)
@@ -70,9 +52,11 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
     private var mVerticalScrollEdge = VERTICAL_EDGE_BOTH
     private val mBaseRotation: Float
 
-    @get:Deprecated("")
-    val isZoomEnabled = true
-    private var mScaleType = ScaleType.FIT_CENTER
+    var minimumScale = DEFAULT_MIN_SCALE
+    var mediumScale = DEFAULT_MID_SCALE
+    var maximumScale = DEFAULT_MAX_SCALE
+    var mScaleType = ScaleType.FIT_CENTER
+    val mDrawMatrix = Matrix()
 
     init {
         mImageView.setOnTouchListener(this)
@@ -85,9 +69,7 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
 
         mGestureDetector!!.setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                if (mOnClickListener != null) {
-                    mOnClickListener!!.onClick(mImageView)
-                }
+                mOnClickListener?.onClick(mImageView)
                 return false
             }
 
@@ -109,16 +91,14 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
                 return true
             }
 
-            override fun onDoubleTapEvent(e: MotionEvent): Boolean {
-                return false
-            }
+            override fun onDoubleTapEvent(e: MotionEvent) = false
         })
     }
 
     private fun initGestureListener() {
         mOnGestureListener = object : OnGestureListener {
             override fun onDrag(dx: Float, dy: Float) {
-                if (mScaleDragDetector!!.isScaling) {
+                if (mScaleDragDetector!!.getIsScaling()) {
                     return
                 }
 
@@ -126,7 +106,7 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
                 checkAndDisplayMatrix()
 
                 val parent = mImageView.parent
-                if (!mScaleDragDetector!!.isScaling && !mBlockParentIntercept) {
+                if (!mScaleDragDetector.getIsScaling() && !mBlockParentIntercept) {
                     if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
                             || mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f
                             || mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -1f
@@ -169,11 +149,7 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
     }
 
     private fun getScale(): Float {
-        return Math.sqrt((Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X).toDouble(), 2.0).toFloat() + Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y).toDouble(), 2.0).toFloat()).toDouble()).toFloat()
-    }
-
-    fun getScaleType(): ScaleType {
-        return mScaleType
+        return Math.sqrt((Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X).toDouble(), 2.0) + Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y).toDouble(), 2.0))).toFloat()
     }
 
     override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
@@ -184,7 +160,7 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
 
     override fun onTouch(v: View, ev: MotionEvent): Boolean {
         var handled = false
-        if (isZoomEnabled && (v as ImageView).drawable != null) {
+        if (mIsZoomEnabled && (v as ImageView).drawable != null) {
             when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
                     val parent = v.getParent()
@@ -207,10 +183,10 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
             }
 
             if (mScaleDragDetector != null) {
-                val wasScaling = mScaleDragDetector.isScaling
+                val wasScaling = mScaleDragDetector.getIsScaling()
                 val wasDragging = mScaleDragDetector.isDragging
                 handled = mScaleDragDetector.onTouchEvent(ev)
-                val didntScale = !wasScaling && !mScaleDragDetector.isScaling
+                val didntScale = !wasScaling && !mScaleDragDetector.getIsScaling()
                 val didntDrag = !wasDragging && !mScaleDragDetector.isDragging
                 mBlockParentIntercept = didntScale && didntDrag
             }
@@ -245,12 +221,10 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
         update()
     }
 
-    fun isZoomable(): Boolean {
-        return isZoomEnabled
-    }
+    fun isZoomable() = mIsZoomEnabled
 
     fun update() {
-        if (isZoomEnabled) {
+        if (mIsZoomEnabled) {
             updateBaseMatrix(mImageView.drawable)
         } else {
             resetMatrix()
@@ -260,10 +234,6 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
     private fun getDrawMatrix(): Matrix {
         mDrawMatrix.set(mBaseMatrix)
         mDrawMatrix.postConcat(mSuppMatrix)
-        return mDrawMatrix
-    }
-
-    fun getImageMatrix(): Matrix {
         return mDrawMatrix
     }
 
@@ -362,10 +332,8 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
     private fun getImageViewHeight(imageView: ImageView) = imageView.height - imageView.paddingTop - imageView.paddingBottom
 
     private fun cancelFling() {
-        if (mCurrentFlingRunnable != null) {
-            mCurrentFlingRunnable!!.cancelFling()
-            mCurrentFlingRunnable = null
-        }
+        mCurrentFlingRunnable?.cancelFling()
+        mCurrentFlingRunnable = null
     }
 
     private inner class AnimatedZoomRunnable internal constructor(private val mZoomStart: Float, private val mZoomEnd: Float, private val mFocalX: Float, private val mFocalY: Float) : Runnable {
