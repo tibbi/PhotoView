@@ -21,29 +21,24 @@ import android.view.ScaleGestureDetector
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
 
-/**
- * Does a whole lot of gesture detecting.
- */
 internal class CustomGestureDetector(context: Context, private val mListener: OnGestureListener) {
-
+    private val INVALID_POINTER_ID = -1
     private var mActivePointerId = INVALID_POINTER_ID
     private var mActivePointerIndex = 0
     private val mDetector: ScaleGestureDetector
 
     private var mVelocityTracker: VelocityTracker? = null
-    var isDragging = false
-        private set
     private var mLastTouchX = 0f
     private var mLastTouchY = 0f
     private val mTouchSlop: Float
     private val mMinimumVelocity: Float
+    var isDragging = false
 
     val isScaling: Boolean
         get() = mDetector.isInProgress
 
     init {
-        val configuration = ViewConfiguration
-                .get(context)
+        val configuration = ViewConfiguration.get(context)
         mMinimumVelocity = configuration.scaledMinimumFlingVelocity.toFloat()
         mTouchSlop = configuration.scaledTouchSlop.toFloat()
         val mScaleListener = object : ScaleGestureDetector.OnScaleGestureListener {
@@ -55,8 +50,7 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                     return false
 
                 if (scaleFactor >= 0) {
-                    mListener.onScale(scaleFactor,
-                            detector.focusX, detector.focusY)
+                    mListener.onScale(scaleFactor, detector.focusX, detector.focusY)
                 }
                 return true
             }
@@ -66,7 +60,6 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
             }
 
             override fun onScaleEnd(detector: ScaleGestureDetector) {
-                // NO-OP
             }
         }
         mDetector = ScaleGestureDetector(context, mScaleListener)
@@ -127,8 +120,6 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                 val dy = y - mLastTouchY
 
                 if (!isDragging) {
-                    // Use Pythagoras to see if drag length is larger than
-                    // touch slop
                     isDragging = Math.sqrt((dx * dx + dy * dy).toDouble()) >= mTouchSlop
                 }
 
@@ -144,7 +135,6 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
             }
             MotionEvent.ACTION_CANCEL -> {
                 mActivePointerId = INVALID_POINTER_ID
-                // Recycle Velocity Tracker
                 if (null != mVelocityTracker) {
                     mVelocityTracker!!.recycle()
                     mVelocityTracker = null
@@ -157,24 +147,18 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                         mLastTouchX = getActiveX(ev)
                         mLastTouchY = getActiveY(ev)
 
-                        // Compute velocity within the last 1000ms
                         mVelocityTracker!!.addMovement(ev)
                         mVelocityTracker!!.computeCurrentVelocity(1000)
 
                         val vX = mVelocityTracker!!.xVelocity
-                        val vY = mVelocityTracker!!
-                                .yVelocity
+                        val vY = mVelocityTracker!!.yVelocity
 
-                        // If the velocity is greater than minVelocity, call
-                        // listener
                         if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-                            mListener.onFling(mLastTouchX, mLastTouchY, -vX,
-                                    -vY)
+                            mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY)
                         }
                     }
                 }
 
-                // Recycle Velocity Tracker
                 if (null != mVelocityTracker) {
                     mVelocityTracker!!.recycle()
                     mVelocityTracker = null
@@ -184,8 +168,6 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                 val pointerIndex = ev.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
                 val pointerId = ev.getPointerId(pointerIndex)
                 if (pointerId == mActivePointerId) {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
                     val newPointerIndex = if (pointerIndex == 0) 1 else 0
                     mActivePointerId = ev.getPointerId(newPointerIndex)
                     mLastTouchX = ev.getX(newPointerIndex)
@@ -194,15 +176,11 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
             }
         }
 
-        mActivePointerIndex = ev
-                .findPointerIndex(if (mActivePointerId != INVALID_POINTER_ID)
-                    mActivePointerId
-                else
-                    0)
+        mActivePointerIndex = ev.findPointerIndex(if (mActivePointerId != INVALID_POINTER_ID) {
+            mActivePointerId
+        } else {
+            0
+        })
         return true
-    }
-
-    companion object {
-        private val INVALID_POINTER_ID = -1
     }
 }

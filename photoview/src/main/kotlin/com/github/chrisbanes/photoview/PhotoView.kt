@@ -24,21 +24,8 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 
-/**
- * A zoomable ImageView. See [PhotoViewAttacher] for most of the details on how the zooming
- * is accomplished
- */
 class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? = null, defStyle: Int = 0) : AppCompatImageView(context, attr, defStyle) {
-
-    /**
-     * Get the current [PhotoViewAttacher] for this view. Be wary of holding on to references
-     * to this attacher, as it has a reference to this view, which, if a reference is held in the
-     * wrong place, can cause memory leaks.
-     *
-     * @return the attacher.
-     */
-    var attacher: PhotoViewAttacher? = null
-        private set
+    private var attacher: PhotoViewAttacher? = null
 
     // adding a workaround to make sure Tap listener works with zooming disabled
     var isZoomable: Boolean
@@ -78,7 +65,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(drawable)
-        // setImageBitmap calls through to this method
         if (attacher != null) {
             attacher!!.update()
         }
