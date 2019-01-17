@@ -282,7 +282,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
-        if (mZoomEnabled && Util.INSTANCE.hasDrawable((ImageView) v)) {
+        if (mZoomEnabled && ((ImageView) v).getDrawable() != null) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     ViewParent parent = v.getParent();
@@ -366,10 +366,8 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
     }
 
     public void setScaleType(ScaleType scaleType) {
-        if (Util.INSTANCE.isSupportedScaleType(scaleType) && scaleType != mScaleType) {
-            mScaleType = scaleType;
-            update();
-        }
+        mScaleType = scaleType;
+        update();
     }
 
     public boolean isZoomable() {
@@ -384,15 +382,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
             // Reset the Matrix...
             resetMatrix();
         }
-    }
-
-    /**
-     * Get the display matrix
-     *
-     * @param matrix target matrix to copy to
-     */
-    public void getDisplayMatrix(Matrix matrix) {
-        matrix.set(getDrawMatrix());
     }
 
     private Matrix getDrawMatrix() {
@@ -495,22 +484,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
             if ((int) mBaseRotation % 180 != 0) {
                 mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
             }
-            switch (mScaleType) {
-                case FIT_CENTER:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-                    break;
-                case FIT_START:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START);
-                    break;
-                case FIT_END:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.END);
-                    break;
-                case FIT_XY:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-                    break;
-                default:
-                    break;
-            }
+            mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
         }
         resetMatrix();
     }
@@ -524,17 +498,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
         float deltaX = 0, deltaY = 0;
         final int viewHeight = getImageViewHeight(mImageView);
         if (height <= viewHeight) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaY = -rect.top;
-                    break;
-                case FIT_END:
-                    deltaY = viewHeight - height - rect.top;
-                    break;
-                default:
-                    deltaY = (viewHeight - height) / 2 - rect.top;
-                    break;
-            }
+            deltaY = (viewHeight - height) / 2 - rect.top;
             mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
         } else if (rect.top > 0) {
             mVerticalScrollEdge = VERTICAL_EDGE_TOP;
@@ -547,17 +511,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
         }
         final int viewWidth = getImageViewWidth(mImageView);
         if (width <= viewWidth) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaX = -rect.left;
-                    break;
-                case FIT_END:
-                    deltaX = viewWidth - width - rect.left;
-                    break;
-                default:
-                    deltaX = (viewWidth - width) / 2 - rect.left;
-                    break;
-            }
+            deltaX = (viewWidth - width) / 2 - rect.left;
             mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
         } else if (rect.left > 0) {
             mHorizontalScrollEdge = HORIZONTAL_EDGE_LEFT;
@@ -568,7 +522,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
         } else {
             mHorizontalScrollEdge = HORIZONTAL_EDGE_NONE;
         }
-        // Finally actually translate the matrix
+
         mSuppMatrix.postTranslate(deltaX, deltaY);
         return true;
     }

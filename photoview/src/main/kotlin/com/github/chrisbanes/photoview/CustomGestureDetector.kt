@@ -181,7 +181,7 @@ internal class CustomGestureDetector(context: Context, private val mListener: On
                 }
             }
             MotionEvent.ACTION_POINTER_UP -> {
-                val pointerIndex = Util.getPointerIndex(ev.action)
+                val pointerIndex = ev.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
                 val pointerId = ev.getPointerId(pointerIndex)
                 if (pointerId == mActivePointerId) {
                     // This was our active pointer going up. Choose a new

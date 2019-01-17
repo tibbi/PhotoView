@@ -39,7 +39,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
      */
     var attacher: PhotoViewAttacher? = null
         private set
-    private var pendingScaleType: ImageView.ScaleType? = null
 
     // adding a workaround to make sure Tap listener works with zooming disabled
     var isZoomable: Boolean
@@ -56,14 +55,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
     init {
         attacher = PhotoViewAttacher(this)
-        //We always pose as a Matrix scale type, though we can change to another scale type
-        //via the attacher
         super.setScaleType(ImageView.ScaleType.MATRIX)
-        //apply the previously applied scale type
-        if (pendingScaleType != null) {
-            scaleType = pendingScaleType!!
-            pendingScaleType = null
-        }
     }
 
     override fun getScaleType(): ImageView.ScaleType {
@@ -79,9 +71,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     }
 
     override fun setScaleType(scaleType: ImageView.ScaleType) {
-        if (attacher == null) {
-            pendingScaleType = scaleType
-        } else {
+        if (attacher != null) {
             attacher!!.scaleType = scaleType
         }
     }
